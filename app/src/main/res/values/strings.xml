@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Mi Aplicación</string>
+    <string name="tv_welcome">Bienvenido a mi aplicación</string>
+    <string name="btnvoice_descripcion">Botón de voz</string>
+    <string name="btnvoice_text">Hablar</string>
+    <string name="iv_chatgpt_description">Imagen de ChatGPT</string>
+    <!-- Agrega otras cadenas aquí -->
+</resources>
