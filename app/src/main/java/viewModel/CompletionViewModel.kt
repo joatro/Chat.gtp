@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import gtp.entity.CompletionResponse
-import CompletionInterceptor
+import model.CompletionInterceptor
 
 class CompletionViewModel: ViewModel() {
     private var interceptor: CompletionInterceptor = CompletionInterceptor()

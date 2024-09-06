@@ -1,3 +1,5 @@
+
+
 plugins {
     id("com.android.application")
     kotlin("android")
@@ -19,6 +21,9 @@ android {
     }
 
     buildTypes {
+        debug {
+            isDebuggable = true
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -34,16 +39,19 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    buildFeatures{
-        viewBinding = true
-    }
+buildFeatures {
+    viewBinding = true
+}
 }
 dependencies {
-    implementation(libs.androidx.core.ktx.v170)
+    implementation (libs.androidx.core.ktx.v170)
     implementation(libs.androidx.appcompat.v161)
     implementation(libs.material.v180)
     implementation(libs.androidx.constraintlayout)
 implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit.v115)

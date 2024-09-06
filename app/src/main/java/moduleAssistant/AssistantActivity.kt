@@ -1,6 +1,7 @@
 package moduleAssistant
 
 import GTP.app.databinding.AssistantActivityBinding
+import android.app.ActivityOptions
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -11,10 +12,10 @@ import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.ViewModelProvider
 import viewModel.CompletionViewModel
 import java.util.Locale
-
 
 class AssistantActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     companion object {
@@ -23,18 +24,23 @@ class AssistantActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     private var tts: TextToSpeech? = null
     private lateinit var mCompletionViewModel: CompletionViewModel
-
     private lateinit var mBinding: AssistantActivityBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = AssistantActivityBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
+        mBinding.btnNavigateToMainActivity.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            val options = ActivityOptions.makeSceneTransitionAnimation(this, it, "transition_name")
+            startActivity(intent, options.toBundle())
+        }
+
         mBinding.btnVoice.setOnClickListener {
             askSpeechInput()
         }
         tts = TextToSpeech(this, this)
         setupViewModel()
-
     }
 
     private fun setupViewModel() {
@@ -45,7 +51,6 @@ class AssistantActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             mBinding.cvChatgpt.visibility = View.VISIBLE
             mBinding.tvResponse.visibility = View.VISIBLE
             speak(it?.choices?.get(0)?.message!!.content)
-
         }
     }
 
@@ -60,61 +65,68 @@ class AssistantActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         startActivityForResult(intent, SPEECH_RECOGNITION)
     }
 
-
-override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-    super.onActivityResult(requestCode, resultCode, data)
-    if (requestCode == SPEECH_RECOGNITION && resultCode == RESULT_OK) {
-        val result = data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
-        if (!result.isNullOrEmpty()) {
-            val text = result[0]
-            mCompletionViewModel.postCompletionLiveData(text)
-            mBinding.pbWaiting.visibility = View.VISIBLE
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == SPEECH_RECOGNITION && resultCode == RESULT_OK) {
+            val result = data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+            if (!result.isNullOrEmpty()) {
+                val text = result[0]
+                mCompletionViewModel.postCompletionLiveData(text)
+                mBinding.pbWaiting.visibility = View.VISIBLE
+            }
         }
     }
-}
 
-        override fun onInit(status: Int) {
-            if (status == TextToSpeech.SUCCESS) {
-                tts!!.language = Locale("ES")
+    override fun onInit(status: Int) {
+        if (status == TextToSpeech.SUCCESS) {
+            val result = tts!!.setLanguage(Locale("ES"))
+            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                // Handle the error
             }
         }
+    }
 
-        override fun onDestroy() {
-            if (tts != null) {
-                tts!!.stop()
-                tts!!.shutdown()
-            }
-            super.onDestroy()
+    override fun onDestroy() {
+        if (tts != null) {
+            tts!!.stop()
+            tts!!.shutdown()
         }
+        super.onDestroy()
+    }
 
+    private fun speak(response: String) {
+        tts?.let {
+            val listener = object : UtteranceProgressListener() {
+                override fun onRangeStart(utteranceId: String?, start: Int, end: Int, frame: Int) {
+                    val spannableString = SpannableString(response)
+                    spannableString.setSpan(
+                        ForegroundColorSpan(Color.parseColor("#7150F5")),
+                        start,
+                        end,
+                        0
+                    )
+                    runOnUiThread {
+                        mBinding.tvResponse.text = spannableString
+                    }
+                }
 
-     private fun speak(response: String) {
-    tts?.let {
-        val listener = object : UtteranceProgressListener() {
-            override fun onRangeStart(utteranceId: String?, start: Int, end: Int, frame: Int) {
-                val spannableString = SpannableString(response)
-                spannableString.setSpan(ForegroundColorSpan(Color.parseColor("#7150F5")), start, end, 0)
-                runOnUiThread {
-                    mBinding.tvResponse.text = spannableString
+                override fun onStart(p0: String?) {}
+
+                override fun onDone(utteranceId: String?) {
+                    runOnUiThread {
+                        mBinding.ltRobot.pauseAnimation()
+                    }
+                }
+
+                @Deprecated("Deprecated in Java")
+                override fun onError(utteranceId: String?) {
+                    runOnUiThread { mBinding.tvWelcome.text = "" }
                 }
             }
-
-            override fun onStart(p0: String?) {}
-
-            override fun onDone(utteranceId: String?) {
-                runOnUiThread {
-                    mBinding.ltRobot.pauseAnimation()
-                }
-            }
-
-            override fun onError(utteranceId: String?) {
-                runOnUiThread { mBinding.tvWelcome.text = "" }
-            }
+            it.setOnUtteranceProgressListener(listener)
+            it.speak(response, TextToSpeech.QUEUE_FLUSH, null, "id")
         }
-        it.setOnUtteranceProgressListener(listener)
-        it.speak(response, TextToSpeech.QUEUE_FLUSH, null, "id")
     }
+
 }
-
-
-    }

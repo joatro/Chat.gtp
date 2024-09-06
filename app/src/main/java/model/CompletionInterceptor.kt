@@ -1,3 +1,5 @@
+package model
+
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -13,9 +15,9 @@ class CompletionInterceptor {
         val service = RetrofitInstance.getRetroInstance().create(CompletionService::class.java)
         scope.launch(Dispatchers.IO) {
             try {
-                var message = Message(content = prompt, role = "user")
+                val message = Message(content = prompt, role = "user")
                 val data = CompletionData(List(1) { message }, "gpt-3.5-turbo")
-                val response = service.getCompletion(data, "Barer")
+                val response = service.getCompletion(data, "Bearer sk-proj-AK2Bq6r8kSR1AU2qbITUT3BlbkFJjqtgfr2tPNe0PKP9YPui")
                 launch(Dispatchers.Main) {
                     callback(response, null)
                 }
