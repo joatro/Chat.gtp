@@ -17,21 +17,13 @@
         <activity
             android:name="moduleAssistant.MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.Chat">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name="moduleAssistant.AssistantActivity"
-            android:exported="true"
             android:label="@string/title_activity_main">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    </application>
 
+    <activity android:name="moduleAssistant.AssistantActivity" />"
+</application>
 </manifest>

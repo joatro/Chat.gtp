@@ -17,7 +17,7 @@ class CompletionInterceptor {
             try {
                 val message = Message(content = prompt, role = "user")
                 val data = CompletionData(List(1) { message }, "gpt-3.5-turbo")
-                val response = service.getCompletion(data, "Bearer sk-proj-AK2Bq6r8kSR1AU2qbITUT3BlbkFJjqtgfr2tPNe0PKP9YPui")
+                val response = service.getCompletion("Authorization","Bearer sk-proj-Foe20tIjRW2s1YwNeQyQT3BlbkFJMMT3Fe0mfFcCzTaAPr0e")
                 launch(Dispatchers.Main) {
                     callback(response, null)
                 }

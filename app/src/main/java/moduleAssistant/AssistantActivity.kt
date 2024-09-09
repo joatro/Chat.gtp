@@ -1,7 +1,7 @@
 package moduleAssistant
 
+import GTP.app.R
 import GTP.app.databinding.AssistantActivityBinding
-import android.app.ActivityOptions
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -12,7 +12,6 @@ import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.ViewModelProvider
 import viewModel.CompletionViewModel
 import java.util.Locale
@@ -30,15 +29,15 @@ class AssistantActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         super.onCreate(savedInstanceState)
         mBinding = AssistantActivityBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
-        mBinding.btnNavigateToMainActivity.setOnClickListener {
+        mBinding.navigateToMainActivityButton.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
-            val options = ActivityOptions.makeSceneTransitionAnimation(this, it, "transition_name")
-            startActivity(intent, options.toBundle())
+            startActivity(intent)
         }
 
         mBinding.btnVoice.setOnClickListener {
             askSpeechInput()
         }
+
         tts = TextToSpeech(this, this)
         setupViewModel()
     }
@@ -128,5 +127,4 @@ class AssistantActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             it.speak(response, TextToSpeech.QUEUE_FLUSH, null, "id")
         }
     }
-
 }

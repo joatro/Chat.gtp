@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="action_FirstFragment_to_assistant_activity" type="id" />
+    <item name="action_SecondFragment_to_FirstFragment" type="id" />
+    <item name="nav_host_fragment" type="id" />
+</resources>

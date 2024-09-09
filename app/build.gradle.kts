@@ -1,5 +1,6 @@
 
 
+
 plugins {
     id("com.android.application")
     kotlin("android")
@@ -7,6 +8,7 @@ plugins {
 }
 
 android {
+
     namespace = "GTP.app"
     compileSdk = 34
 
@@ -52,6 +54,7 @@ implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+    implementation(libs.androidx.material3.android)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit.v115)
