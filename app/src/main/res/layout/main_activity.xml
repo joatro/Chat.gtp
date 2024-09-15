@@ -34,7 +34,7 @@
         android:id="@+id/paragraphText"
         android:layout_width="386dp"
         android:layout_height="168dp"
-        android:text="Este es un párrafo debajo de la imagen."
+        android:text="Este es un párrafo debajo de la imagen chat gtp."
         android:textColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
